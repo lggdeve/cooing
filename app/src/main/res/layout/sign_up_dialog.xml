@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/sign_up_id_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="아이디" />
+
+    <Button
+        android:id="@+id/check_id_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="중복 확인" />
+
+    <EditText
+        android:id="@+id/sign_up_pw_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="비밀번호"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/confirm_pw_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="비밀번호 확인"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/confirm_pw_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="비밀번호 확인" />
+
+    <EditText
+        android:id="@+id/name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="이름" />
+
+    <EditText
+        android:id="@+id/phone_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="휴대폰 번호"
+        android:inputType="phone" />
+
+    <EditText
+        android:id="@+id/birth_date_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="생년월일"
+        android:inputType="none"
+        android:importantForAccessibility="yes"
+        android:focusable="false"
+        android:clickable="true" />
+
+
+
+</LinearLayout>
