@@ -49,11 +49,17 @@ public class LoginActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 회원가입 화면으로 이동
-                // 예를 들어, SignUpActivity로 이동
-
+                SignUpDialogFragment signUpDialog = new SignUpDialogFragment();
+                signUpDialog.show(getSupportFragmentManager(), "SignUpDialog");
             }
         });
+
+
+        // 로그인 화면에 메시지 표시
+        Intent intent = getIntent();
+        String message = intent.getStringExtra("message");
+        if (message != null) {
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        }
     }
 }
-
