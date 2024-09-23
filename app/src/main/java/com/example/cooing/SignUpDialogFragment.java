@@ -2,6 +2,7 @@ package com.example.cooing;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,8 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-import org.json.JSONObject;
+
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -160,6 +161,9 @@ public class SignUpDialogFragment extends DialogFragment {
         } else {
             // 서버와 통신하여 회원가입 처리 로직
             new SignUpTask().execute(signUpId, signUpPassword, name, birthDate, phone);
+            // 여기에 다음 액티비티로 이동하는 코드 추가
+            Intent intent = new Intent(getActivity(), CoupleCodeActivity.class); // NextActivity는 다음 액티비티의 이름
+            startActivity(intent);
         }
     }
 
@@ -205,23 +209,5 @@ public class SignUpDialogFragment extends DialogFragment {
                 return null;
             }
         }
-
-        @Override
-        protected void onPostExecute(String result) {
-
-            dismiss();
-            if (isAdded()) {
-                if (result != null && result.contains("Data inserted successfully")) {
-                    Toast.makeText(getActivity(), "회원가입 성공!", Toast.LENGTH_SHORT).show();
-                    FragmentManager fragmentManager = getParentFragmentManager();
-                    NewDetailsDialogFragment newDetailsDialogFragment = new NewDetailsDialogFragment();
-                    newDetailsDialogFragment.show(fragmentManager, "NewDetailsDialog");
-                } else {
-                    Toast.makeText(getActivity(), "회원가입 실패. 다시 시도하세요.", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Log.d("SignUpTask", "Fragment is not added anymore.");
-            }
-        }
     }
-    }
+}
