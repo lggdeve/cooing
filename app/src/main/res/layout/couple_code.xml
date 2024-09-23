@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="Couple Code"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/nickname_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="애칭"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+    <EditText
+        android:id="@+id/date_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="사랑을 시작하게 된 날짜"
+        app:layout_constraintTop_toBottomOf="@id/nickname_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+    <EditText
+        android:id="@+id/code_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Generated Code"
+        app:layout_constraintTop_toBottomOf="@id/date_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"
+        android:focusable="false" />
+
+    <EditText
+        android:id="@+id/enter_code_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="코드 발급"
+        app:layout_constraintTop_toBottomOf="@id/code_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+    <Button
+        android:id="@+id/generate_code_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="코드 발급"
+        app:layout_constraintTop_toBottomOf="@id/enter_code_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="상대방 코드"
+        app:layout_constraintTop_toBottomOf="@id/generate_code_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+    <Button
+        android:id="@+id/connection_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="연결하기"
+        app:layout_constraintTop_toBottomOf="@id/confirm_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
