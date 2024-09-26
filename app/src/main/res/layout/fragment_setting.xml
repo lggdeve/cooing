@@ -1,6 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".SettingFragment">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/generate_code_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="내 코드 발급받기"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/generated_code_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="생성된 코드: "
+        android:textSize="18sp"
+        android:minHeight="48dp"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/partner_code_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="상대방 코드 입력"
+        android:layout_marginBottom="16dp"
+        android:minHeight="56dp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/start_date_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="사랑을 시작한 날짜를 입력하세요."
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:padding="12dp"
+        android:gravity="center" />
+
+    <Button
+        android:id="@+id/connect_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="연결하기"
+        android:layout_marginTop="16dp"/>
+
+
+</LinearLayout>
