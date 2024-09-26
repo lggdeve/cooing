@@ -1,6 +1,7 @@
 package com.example.cooing;
 
 import android.app.AlertDialog;
+import android.content.SharedPreferences; // 추가
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,9 +28,10 @@ import java.util.Random;
 
 public class CoupleCodeActivity extends AppCompatActivity {
 
-    private EditText nicknameText, dateText, codeText, enterCodeText;
+    private EditText nicknameText, dateText, codeText, enterCodeText; // myIdEditText 추가
     private Button generateCodeButton, saveButton; // 저장 버튼 추가
     private String generatedCode;
+    private  TextView myIdTextview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +43,21 @@ public class CoupleCodeActivity extends AppCompatActivity {
         dateText = findViewById(R.id.date_text);
         codeText = findViewById(R.id.code_text);
         enterCodeText = findViewById(R.id.enter_code_text);
+        myIdTextview = findViewById(R.id.myid); // myIdEditText 초기화
         generateCodeButton = findViewById(R.id.generate_code_button);
         saveButton = findViewById(R.id.connection_button); // 저장 버튼 초기화
+
+        // SharedPreferences에서 아이디 가져오기
+        SharedPreferences sharedPref = getSharedPreferences("MyPref", MODE_PRIVATE);
+        String userId = sharedPref.getString("user_id", null); // 기본값은 null
+
+        // TextView 초기화
+        TextView myIdTextView = findViewById(R.id.myid); // myIdTextView 초기화
+
+        // 가져온 아이디가 null이 아닐 경우 TextView에 설정
+        if (userId != null) {
+            myIdTextView.setText(userId); // TextView에 아이디 설정
+        }
 
         // 날짜 선택 버튼 클릭 리스너 설정
         dateText.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +145,7 @@ public class CoupleCodeActivity extends AppCompatActivity {
             String coupleCode = params[2];
 
             try {
-                URL url = new URL("http://cooing.dothome.co.kr/couple.php"); // 서버의 PHP 파일 URL로 변경 필요
+                URL url = new URL("http://cooing.dothome.co.kr/couple_code.php"); // 서버의 PHP 파일 URL로 변경 필요
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
