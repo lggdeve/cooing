@@ -41,7 +41,12 @@
         android:id="@+id/name_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="이름" />
+        android:hint="사용자 이름" />
+    <EditText
+        android:id="@+id/nickname_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="쿠잉에서 사용 할 닉네임" />
 
     <EditText
         android:id="@+id/phone_text"
