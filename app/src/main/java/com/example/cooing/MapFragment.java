@@ -23,6 +23,7 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -95,16 +96,16 @@ public class MapFragment extends Fragment {
                 }
             }
         });
-
         btnKor3Loc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Map_detail.class);
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MapDetailActivity.class);
                 startActivity(intent);
             }
         });
 
         return view;
+
     }
 
     private Location getLocationFromAddress(Context context, String address) {

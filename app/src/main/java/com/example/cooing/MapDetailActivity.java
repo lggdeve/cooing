@@ -1,17 +1,13 @@
 package com.example.cooing;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -23,31 +19,28 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapDetailFragment extends Fragment {
+public class MapDetailActivity extends AppCompatActivity {
 
     private EditText editTextTitle;
     private EditText editTextContent;
     private static final String SERVER_URL = "http://cooing.dothome.co.kr/write_update.php"; // 서버 URL
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // 프래그먼트 레이아웃 설정
-        View view = inflater.inflate(R.layout.map_detail, container, false);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.map_detail); // Assuming the same layout file
 
         // UI 요소 초기화
-        editTextTitle = view.findViewById(R.id.editTextTitle_mapDetail);
-        editTextContent = view.findViewById(R.id.editTextContent_mapDetail);
-        ImageButton backButton = view.findViewById(R.id.backButton_mapDetail);
-        Button uploadButton = view.findViewById(R.id.uploadButton_mapDetail);
+        editTextTitle = findViewById(R.id.editTextTitle_mapDetail);
+        editTextContent = findViewById(R.id.editTextContent_mapDetail);
+        ImageButton backButton = findViewById(R.id.backButton_mapDetail);
+        Button uploadButton = findViewById(R.id.uploadButton_mapDetail);
 
         // 뒤로가기 버튼 클릭 리스너 설정
-        backButton.setOnClickListener(v -> requireActivity().onBackPressed());
+        backButton.setOnClickListener(v -> onBackPressed());
 
         // 업로드 버튼 클릭 리스너 설정
         uploadButton.setOnClickListener(v -> uploadData());
-
-        return view;
     }
 
     // 데이터 업로드 메서드
@@ -56,20 +49,20 @@ public class MapDetailFragment extends Fragment {
         String content = editTextContent.getText().toString();
 
         // 요청 큐 생성
-        RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         // POST 요청 생성
         StringRequest stringRequest = new StringRequest(Request.Method.POST, SERVER_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(requireContext(), "Data uploaded successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapDetailActivity.this, "Data uploaded successfully", Toast.LENGTH_SHORT).show();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(requireContext(), "Error uploading data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapDetailActivity.this, "Error uploading data", Toast.LENGTH_SHORT).show();
                     }
                 }
         ) {
