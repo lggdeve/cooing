@@ -3,12 +3,14 @@ package com.example.cooing;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -29,7 +31,7 @@ import java.net.URLEncoder;
 
 public class SignUpDialogFragment extends DialogFragment {
 
-    private EditText signUpIdText, signUpPwText, confirmPwText, nameText, phoneText, birthDateText;
+    private EditText signUpIdText, signUpPwText, confirmPwText, nameText, nicknameText, phoneText, birthDateText;
     private Button checkIdButton, confirmPwButton;
 
     @NonNull
@@ -46,6 +48,7 @@ public class SignUpDialogFragment extends DialogFragment {
         signUpPwText = view.findViewById(R.id.sign_up_pw_text);
         confirmPwText = view.findViewById(R.id.confirm_pw_text);
         nameText = view.findViewById(R.id.name_text);
+        nicknameText = view.findViewById(R.id.nickname_text);
         phoneText = view.findViewById(R.id.phone_text);
         birthDateText = view.findViewById(R.id.birth_date_text);
 
@@ -147,23 +150,23 @@ public class SignUpDialogFragment extends DialogFragment {
         }
     }
 
+
     // 회원가입 처리 로직
     private void handleSignUp() {
         String signUpId = signUpIdText.getText().toString().trim();
         String signUpPassword = signUpPwText.getText().toString().trim();
         String name = nameText.getText().toString().trim();
+        String nickname = nicknameText.getText().toString().trim();
         String phone = phoneText.getText().toString().trim();
         String birthDate = birthDateText.getText().toString().trim();
 
-        if (TextUtils.isEmpty(signUpId) || TextUtils.isEmpty(signUpPassword) || TextUtils.isEmpty(name)
+        if (TextUtils.isEmpty(signUpId) || TextUtils.isEmpty(signUpPassword) || TextUtils.isEmpty(name) || TextUtils.isEmpty(nickname)
                 || TextUtils.isEmpty(phone) || TextUtils.isEmpty(birthDate)) {
             Toast.makeText(getActivity(), "모든 필드를 입력하세요.", Toast.LENGTH_SHORT).show();
         } else {
             // 서버와 통신하여 회원가입 처리 로직
-            new SignUpTask().execute(signUpId, signUpPassword, name, birthDate, phone);
-            // 여기에 다음 액티비티로 이동하는 코드 추가
-            Intent intent = new Intent(getActivity(), CoupleCodeActivity.class); // NextActivity는 다음 액티비티의 이름
-            startActivity(intent);
+            new SignUpTask().execute(signUpId, signUpPassword, name, nickname, birthDate, phone);
+            Toast.makeText(getActivity(), "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -181,8 +184,9 @@ public class SignUpDialogFragment extends DialogFragment {
                 String postData = "member_id=" + URLEncoder.encode(params[0], "UTF-8")
                         + "&member_password=" + URLEncoder.encode(params[1], "UTF-8")
                         + "&name=" + URLEncoder.encode(params[2], "UTF-8")
-                        + "&birth=" + URLEncoder.encode(params[3], "UTF-8")
-                        + "&phonenumber=" + URLEncoder.encode(params[4], "UTF-8");
+                        + "&nickname=" + URLEncoder.encode(params[3], "UTF-8")
+                        + "&birth=" + URLEncoder.encode(params[4], "UTF-8")
+                        + "&phonenumber=" + URLEncoder.encode(params[5], "UTF-8");
                 Log.d("SignUpTask", "doInBackground started");
                 // POST 데이터 전송
                 OutputStream os = conn.getOutputStream();
