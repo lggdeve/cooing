@@ -38,9 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private Fragment mapFragment;
     private Fragment questionFragment;
     private Fragment avatarFragment;
-    private Fragment settingFragment;
+    private SettingFragment settingFragment; // SettingFragment 변수 선언
     private BottomNavigationView bottomNavigationView;
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -74,7 +73,12 @@ public class MainActivity extends AppCompatActivity {
         mapFragment = new MapFragment();
         questionFragment = new QuestionFragment();
         avatarFragment = new AvatarFragment();
+
+        // SettingFragment를 초기화하고 member_id 전달
         settingFragment = new SettingFragment();
+        Bundle args = new Bundle();
+        args.putString("member_id", member_id); // member_id를 Bundle에 추가
+        settingFragment.setArguments(args); // SettingFragment에 전달
 
         // 앱이 처음 시작될 때 홈 프래그먼트 표시
         if (savedInstanceState == null) {
@@ -92,27 +96,19 @@ public class MainActivity extends AppCompatActivity {
 
                 // 각 메뉴 아이템에 맞는 프래그먼트 표시
                 if (item.getItemId() == R.id.nav_home) {
-                    fragmentTransaction.replace(R.id.menu_frame_layout, mainFragment)
-                            .commitAllowingStateLoss();
-                    bottomNavigationView.setVisibility(View.VISIBLE);
+                    fragmentTransaction.replace(R.id.menu_frame_layout, mainFragment);
                 } else if (item.getItemId() == R.id.nav_map) {
-                    fragmentTransaction.replace(R.id.menu_frame_layout, mapFragment)
-                            .commitAllowingStateLoss();
-                    bottomNavigationView.setVisibility(View.VISIBLE);
+                    fragmentTransaction.replace(R.id.menu_frame_layout, mapFragment);
                 } else if (item.getItemId() == R.id.nav_question) {
-                    fragmentTransaction.replace(R.id.menu_frame_layout, questionFragment)
-                            .commitAllowingStateLoss();
-                    bottomNavigationView.setVisibility(View.VISIBLE);
+                    fragmentTransaction.replace(R.id.menu_frame_layout, questionFragment);
                 } else if (item.getItemId() == R.id.nav_avatar) {
-                    fragmentTransaction.replace(R.id.menu_frame_layout, avatarFragment)
-                            .commitAllowingStateLoss();
-                    bottomNavigationView.setVisibility(View.VISIBLE);
+                    fragmentTransaction.replace(R.id.menu_frame_layout, avatarFragment);
                 }
+                fragmentTransaction.commitAllowingStateLoss();
+                bottomNavigationView.setVisibility(View.VISIBLE);
                 return true;
             }
         });
-
-
 
         // NavigationView 설정 (사이드 메뉴)
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -123,19 +119,14 @@ public class MainActivity extends AppCompatActivity {
                 // 사이드 메뉴에서 선택한 항목에 맞는 프래그먼트 설정
                 if (item.getItemId() == R.id.nav_home) {
                     selectedFragment = mainFragment;
-                    bottomNavigationView.setVisibility(View.VISIBLE);
                 } else if (item.getItemId() == R.id.nav_map) {
                     selectedFragment = mapFragment;
-                    bottomNavigationView.setVisibility(View.VISIBLE);
                 } else if (item.getItemId() == R.id.nav_question) {
                     selectedFragment = questionFragment;
-                    bottomNavigationView.setVisibility(View.VISIBLE);
-                    Log.d("FragmentCheck", "SettingFragment selected");
                 } else if (item.getItemId() == R.id.nav_avatar) {
                     selectedFragment = avatarFragment;
-                    bottomNavigationView.setVisibility(View.VISIBLE);
                 } else if (item.getItemId() == R.id.nav_setting) {
-                    selectedFragment = settingFragment;
+                    selectedFragment = settingFragment; // SettingFragment 사용
                     bottomNavigationView.setVisibility(View.GONE); // 숨기기
                     Log.d("FragmentCheck", "SettingFragment selected");
                 }

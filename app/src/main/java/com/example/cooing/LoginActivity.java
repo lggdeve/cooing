@@ -115,6 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("member_id",idText.getText().toString()); // ID 전달
                     startActivity(intent); // MainActivity로 이동
+
                     finish(); // 현재 로그인 액티비티 종료
                 } else {
                     Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();

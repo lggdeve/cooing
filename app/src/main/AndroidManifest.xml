@@ -35,7 +35,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="발급받은 KEY를 입력해주세요" />
+            android:value="AIzaSyDcY8Z2i6MpED2ME5rN3N72DiB_mGNNURc" />
 
         <activity android:name=".LoginActivity"
             android:exported="true">
