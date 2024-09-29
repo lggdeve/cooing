@@ -1,16 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AvatarFragment">
+    android:background="#FFFFFF">
 
+    <!-- 제목 TextView 추가 -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Avatar"
-        android:textColor="@android:color/black"
-        android:textSize="50sp"/>
+        android:id="@+id/avatar_titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="당신의 캐릭터를 고르세요!"
+        android:textColor="#FF69B4"
+        android:textSize="35sp"
+        android:layout_marginTop="80dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+    />
 
-</LinearLayout>
+    <!-- 남자 아바타 이미지 -->
+    <ImageView
+        android:id="@+id/imageViewBoy"
+        android:layout_width="190dp"
+        android:layout_height="300dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="150dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imageViewGirl"
+        app:layout_constraintTop_toBottomOf="@id/avatar_titleTextView" />
+
+    <!-- 여자 아바타 이미지 -->
+    <ImageView
+        android:id="@+id/imageViewGirl"
+        android:layout_width="190dp"
+        android:layout_height="300dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="150dp"
+    app:layout_constraintStart_toEndOf="@id/imageViewBoy"
+    app:layout_constraintTop_toBottomOf="@id/avatar_titleTextView"
+    app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

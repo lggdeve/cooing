@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     // 로그인 처리 로직 추가 (서버와 통신 등)
                     new LoginTask().execute(id, password);
+
                 }
             }
         });
