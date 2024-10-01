@@ -35,7 +35,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="API키" />
+            android:value="AIzaSyDcY8Z2i6MpED2ME5rN3N72DiB_mGNNURc" />
 
         <activity android:name=".LoginActivity"
             android:exported="true">
@@ -55,6 +55,8 @@
         <activity android:name=".MapDetailActivity"
             android:exported="true">
         </activity>
+        <activity android:name=".AnswerActivity"
+            android:exported="true"/>
 
 
 

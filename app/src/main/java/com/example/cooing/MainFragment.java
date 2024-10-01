@@ -2,12 +2,16 @@ package com.example.cooing;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,9 +19,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +41,21 @@ public class MainFragment extends Fragment {
     private CalendarView calendarView;
     private RecyclerView recyclerView;
     private MemoAdapter memoAdapter;
+    private TextView coupleDateTextView;
     private Map<String, List<String>> monthlyMemoMap; // Map to store memos by month
+    private ImageView profileImage; // 내 캐릭터 이미지를 표시할 ImageView
+    private ImageView partnerImageView; // 상대방 캐릭터 이미지를 표시할 ImageView
+    private String member_id;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // arguments로부터 member_id 가져오기
+        if (getArguments() != null) {
+            member_id = getArguments().getString("member_id");
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,12 +64,18 @@ public class MainFragment extends Fragment {
 
         calendarView = rootview.findViewById(R.id.calendarView);
         recyclerView = rootview.findViewById(R.id.recyclerView);
+        profileImage = rootview.findViewById(R.id.profileImage); // 내 캐릭터 ImageView 초기화
+        partnerImageView = rootview.findViewById(R.id.partnerImageView); // 상대방 캐릭터 ImageView 초기화
+        coupleDateTextView = rootview.findViewById(R.id.coupleDateTextView);
+
 
         monthlyMemoMap = new HashMap<>();
         memoAdapter = new MemoAdapter(new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(memoAdapter);
-
+        // 캐릭터와 커플 날짜를 동시에 가져오기
+        new GetCharactersTask().execute(member_id);  // 캐릭터 데이터를 가져오는 AsyncTask
+        new GetCoupleDateTask().execute(member_id);   // 커플 날짜를 가져오는 AsyncTask
         loadMemos();
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -50,6 +83,7 @@ public class MainFragment extends Fragment {
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 showPopup(year, month, dayOfMonth);
             }
+
         });
 
         return rootview;
@@ -149,4 +183,126 @@ public class MainFragment extends Fragment {
         }
     }
 
+    private class GetCharactersTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            String member_id = params[0];
+            String response = "";
+            try {
+                Log.d("GetNicknameTask", "Fetching nickname for member_id: " + member_id);
+
+                URL url = new URL("http://cooing.dothome.co.kr/main_item.php?member_id=" + member_id);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+
+                int responseCode = conn.getResponseCode();
+                Log.d("GetNicknameTask", "Response Code: " + responseCode);
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                StringBuilder stringBuilder = new StringBuilder();
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+
+                response = stringBuilder.toString();
+                reader.close();
+                Log.d("GetNicknameTask", "Response: " + response);
+            } catch (Exception e) {
+                Log.e("GetNicknameTask", "Error fetching nickname", e);
+            }
+            return response;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            if (result == null || result.isEmpty()) {
+                Log.e("GetCharactersTask", "Received empty response");
+                Toast.makeText(getContext(), "Failed to load characters.", Toast.LENGTH_SHORT).show();
+                return; // Early exit if the response is empty
+            }
+
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+
+                // 내 캐릭터 이미지 URL 가져오기
+                String profileImageUrl = jsonObject.optString("profileImage", null);
+                // 상대방 캐릭터 이미지 URL 가져오기
+                String partnerImageUrl = jsonObject.optString("partnerImageView", null);
+
+                // 내 캐릭터 이미지 설정
+                if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                    Glide.with(profileImage.getContext())
+                            .load(profileImageUrl)
+                            .placeholder(R.drawable.baseline_person_24) // 기본 이미지 (로딩 중)
+                            .into(profileImage);
+                } else {
+                    profileImage.setImageResource(R.drawable.baseline_person_24); // 기본 이미지 설정
+                }
+
+                // 상대방 캐릭터 이미지 설정
+                if (partnerImageUrl != null && !partnerImageUrl.isEmpty()) {
+                    Glide.with(partnerImageView.getContext())
+                            .load(partnerImageUrl)
+                            .placeholder(R.drawable.baseline_person_24) // 기본 이미지 (로딩 중)
+                            .into(partnerImageView);
+                } else {
+                    partnerImageView.setImageResource(R.drawable.baseline_person_24); // 기본 이미지 설정
+                }
+
+            } catch (JSONException e) {
+                Log.e("GetCharactersTask", "Error parsing JSON", e);
+                // JSON 파싱 중 에러 발생 시 기본 이미지 설정
+                profileImage.setImageResource(R.drawable.baseline_person_24); // 기본 이미지 설정
+                partnerImageView.setImageResource(R.drawable.baseline_person_24); // 기본 이미지 설정
+            }
+        }
+    }
+    private class GetCoupleDateTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            String member_id = params[0];
+            String response = "";
+            try {
+                URL url = new URL("http://cooing.dothome.co.kr/get_couple_date.php?member_id=" + member_id);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+
+                    while ((line = reader.readLine()) != null) {
+                        stringBuilder.append(line);
+                    }
+
+                    response = stringBuilder.toString();
+                    reader.close();
+                }
+            } catch (Exception e) {
+                Log.e("GetCoupleDateTask", "Error fetching couple date", e);
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result == null || result.isEmpty()) {
+                Log.e("GetCoupleDateTask", "Received empty response");
+                coupleDateTextView.setText("Failed to load couple date.");
+                return;
+            }
+
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                String coupleDate = jsonObject.optString("days", "??");
+                coupleDateTextView.setText("쿠잉한지 " + coupleDate +"일 째"); // 텍스트 설정
+            } catch (JSONException e) {
+                Log.e("GetCoupleDateTask", "Error parsing JSON", e);
+                coupleDateTextView.setText("Failed to load couple date.");
+            }
+        }
+    }
 }

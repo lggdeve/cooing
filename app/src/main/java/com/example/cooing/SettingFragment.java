@@ -109,11 +109,19 @@ public class SettingFragment extends Fragment {
                     int month = datePicker.getMonth(); // 0부터 시작하므로 +1 필요
                     int day = datePicker.getDayOfMonth();
 
+
+                    // 선택한 날짜를 String으로 변환
+                    String selectedDate = String.format("%d-%02d-%02d", year, month, day);
+
                     // 선택한 날짜를 TextView에 설정
-                    startDateTextView.setText(String.format("%d-%02d-%02d", year, month + 1, day));
-                    Toast.makeText(getActivity(), "선택된 날짜: " + startDateTextView.getText(), Toast.LENGTH_SHORT).show();
+                    startDateTextView.setText(selectedDate);
+                    Toast.makeText(getActivity(), "선택된 날짜: " + selectedDate, Toast.LENGTH_SHORT).show();
+
+                    // 선택한 날짜를 서버로 전송 (String 형태)
+                    new SaveDateTask().execute(selectedDate, member_id);
                 })
                 .setNegativeButton("취소", (dialog, id) -> dialog.cancel());
+
 
         builder.create().show();
     }
@@ -128,6 +136,64 @@ public class SettingFragment extends Fragment {
             code.append(characters.charAt(random.nextInt(characters.length())));
         }
         return code.toString();
+    }
+    private class SaveDateTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            String selectedDate = params[0];
+            String member_id = params[1];
+            String result = "";
+
+            try {
+                // 서버에 데이터 전송
+                URL url = new URL("http://cooing.dothome.co.kr/couple_date.php");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setDoOutput(true);
+
+                // 전송할 데이터 설정
+                OutputStream os = connection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                writer.write("couple_date=" + URLEncoder.encode(selectedDate, "UTF-8") +
+                        "&member_id=" + URLEncoder.encode(member_id, "UTF-8"));
+                writer.flush();
+                writer.close();
+                os.close();
+
+                // 서버 응답 받기
+                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                br.close();
+                result = sb.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                // 서버의 응답 처리
+                JSONObject jsonResponse = new JSONObject(result);
+                boolean success = jsonResponse.getBoolean("success");
+                String message = jsonResponse.getString("message");
+
+                if (success) {
+                    Toast.makeText(getActivity(), "날짜가 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "날짜 저장 실패: " + message, Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), "응답 파싱 실패.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private class SendCodeTask extends AsyncTask<String, Void, String> {
@@ -292,6 +358,7 @@ public class SettingFragment extends Fragment {
                 }
             }
         }
+
     }
 }
 

@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
         AvatarFragment avatarFragment = new AvatarFragment();
         avatarFragment.setArguments(args); // member_id를 AvatarFragment에도 전달
 
+        // MainFragment 설정
+        MainFragment mainFragment = new MainFragment();
+        mainFragment.setArguments(args); // member_id를 MainFragment에도 전달
 
 
         // 앱 시작 시 MainFragment를 화면에 표시
